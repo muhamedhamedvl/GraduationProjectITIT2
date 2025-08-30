@@ -1,5 +1,5 @@
 
-﻿using CourseManagement.DAL.Models;
+﻿using CourseManagement.DAL.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
