@@ -1,4 +1,4 @@
-using CourseManagement.DAL.Models;
+using CourseManagement.DAL.Entites;
 
 namespace CourseManagement.DAL.Interfaces
 {
