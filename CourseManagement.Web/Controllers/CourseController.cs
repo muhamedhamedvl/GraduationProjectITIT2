@@ -3,7 +3,7 @@
 using CourseManagement.BLL.Services;
 using CourseManagement.DAL.Data;
 using CourseManagement.DAL.Migrations;
-using CourseManagement.DAL.Models;
+using CourseManagement.DAL.Entites;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
