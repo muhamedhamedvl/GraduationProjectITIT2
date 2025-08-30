@@ -1,0 +1,97 @@
+﻿@model CourseManagement.BLL.ViewModels.UserListVM
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2 class="mb-3">Users</h2>
+
+<!-- Alerts -->
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+
+<!-- Search & PageSize -->
+<form method="get" asp-action="Index" class="row mb-3">
+    <div class="col-md-4">
+        <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="Search by name..." />
+    </div>
+    <div class="col-md-3">
+        <select name="pageSize" class="form-select" onchange="this.form.submit()">
+            <option value="5" selected="@(Model.PageSize == 5)">5 per page</option>
+            <option value="10" selected="@(Model.PageSize == 10)">10 per page</option>
+            <option value="15" selected="@(Model.PageSize == 15)">15 per page</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+    <div class="col-md-3 text-end">
+        <a asp-action="Create" class="btn btn-success">+ Create User</a>
+    </div>
+</form>
+
+<!-- Table -->
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th style="width:180px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Items.Any())
+        {
+            foreach (var user in Model.Items)
+            {
+                <tr>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center">No users found</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index"
+                asp-route-search="@Model.Search"
+                asp-route-page="@(Model.Page - 1)"
+                asp-route-pageSize="@Model.PageSize">Previous</a>
+        </li>
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Page ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                    asp-route-search="@Model.Search"
+                    asp-route-page="@i"
+                    asp-route-pageSize="@Model.PageSize">@i</a>
+            </li>
+        }
+
+        <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index"
+                asp-route-search="@Model.Search"
+                asp-route-page="@(Model.Page + 1)"
+                asp-route-pageSize="@Model.PageSize">Next</a>
+        </li>
+    </ul>
+</nav>
