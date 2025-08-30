@@ -1,4 +1,4 @@
-using CourseManagement.DAL.Models;
+using CourseManagement.DAL.Entites;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseManagement.BLL.Interfaces
