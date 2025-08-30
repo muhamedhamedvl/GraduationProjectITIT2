@@ -1,6 +1,6 @@
 using CourseManagement.BLL.Interfaces;
 using CourseManagement.DAL.Interfaces;
-using CourseManagement.DAL.Models;
+using CourseManagement.DAL.Entites;
 
 namespace CourseManagement.BLL.Services
 {
