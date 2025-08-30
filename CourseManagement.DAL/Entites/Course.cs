@@ -24,6 +24,9 @@ namespace CourseManagement.DAL.Entites
 
         [ForeignKey("InstructorId")]
         public Instructor Instructor { get; set; }
+
+     public ICollection<Session> Sessions { get; set; }
+
     
     }
 }
