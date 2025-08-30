@@ -1,6 +1,6 @@
 using CourseManagement.DAL.Data;
 using CourseManagement.DAL.Interfaces;
-using CourseManagement.DAL.Models;
+using CourseManagement.DAL.Entites;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseManagement.DAL.Repositories
