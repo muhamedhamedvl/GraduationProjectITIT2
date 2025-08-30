@@ -1,1 +1,17 @@
+@model CourseManagement.BLL.ViewModels.SessionViewModel
+@{
+    ViewData["Title"] = "Delete Session";
+}
+
+<h2>Delete Session</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete the session "<strong>@Model.Name</strong>"?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
 ﻿
