@@ -25,6 +25,10 @@ builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
 builder.Services.AddScoped<IInstructorService, InstructorService>();
 
+               builder.Services.AddScoped<SessionService, SessionService>();
+
+   builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
            
