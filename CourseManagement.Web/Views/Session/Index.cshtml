@@ -1,1 +1,49 @@
+@model IEnumerable<CourseManagement.BLL.ViewModels.SessionViewModel>
+
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<h2>Sessions</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form method="get" class="mb-3">
+    <input type="text" name="courseName" value="@ViewBag.CourseName" placeholder="Search by course name" class="form-control" style="width:300px; display:inline-block;" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-success">Add New Session</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Course</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model)
+        {
+            <tr>
+                <td>@session.Name</td>
+                <td>@session.CourseName</td>
+                <td>@session.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@session.EndDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = session.Id })" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="@Url.Action("Delete", new { id = session.Id })" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 ﻿
