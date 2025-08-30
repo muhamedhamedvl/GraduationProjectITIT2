@@ -1,1 +1,53 @@
+@model IEnumerable<CourseManagement.DAL.Models.Course>
+@{
+    ViewBag.Title = "Courses";
+}
+
+<h2>Courses</h2>
+
+<form method="post" asp-action="Index">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name" />
+    <input type="text" name="category" value="@ViewBag.Category" placeholder="Search by category" />
+    <button type="submit">Search</button>
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Course</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Instructor</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.Name</td>
+                <td>@course.Category</td>
+                <td>@course.Instructor.FirstName @course.Instructor.LastName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-success me-1"><i class="bi bi-pen"></i>Edit</a> |
+                    <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info">Details</a>
+
+                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i>Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    Page @ViewBag.CurrentPage of @ViewBag.TotalPages
+    <br />
+    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+    {
+        <a asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-category="@ViewBag.Category">@i</a>
+    }
+</div>
 ﻿
