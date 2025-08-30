@@ -20,6 +20,10 @@ namespace CourseManagement.Web
             builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+builder.Services.AddScoped<IInstructorService, InstructorService>();
 
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
