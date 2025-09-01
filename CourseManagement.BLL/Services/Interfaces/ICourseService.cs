@@ -1,5 +1,6 @@
 
-﻿using CourseManagement.DAL.Entites;
+using CourseManagement.BLL.ViewModels;
+using CourseManagement.DAL.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,13 @@ namespace CourseManagement.BLL.Interfaces
 {
     public interface ICourseService
     {
-        Task<IEnumerable<Course>> GetPagedCoursesAsync(string? search, string? category, int page, int pageSize);
-        Task<int> GetCoursesCountAsync(string? search, string? category);
-        Task<Course?> GetCourseAsync(int id);
-        Task<IEnumerable<Course>> GetAllCoursesAsync();
-        Task AddCourseAsync(Course course);
-        Task UpdateCourseAsync(Course course);
-        Task DeleteCourseAsync(int id);
-        Task<bool> IsCourseNameUniqueAsync(string name, int? excludeId = null);
-    
+        Task<IEnumerable<CourseVM>> GetAllAsync();
+        Task<CourseVM?> GetByIdAsync(int id);
+        Task<CourseVM?> GetWithSessionsAsync(int id);
+        Task<IEnumerable<CourseVM>> SearchByNameAsync(string name);
+        Task AddAsync(CourseVM vm);
+        Task UpdateAsync(CourseVM vm);
+        Task DeleteAsync(int id);
 
     }
 }

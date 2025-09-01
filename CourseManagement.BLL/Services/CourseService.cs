@@ -1,6 +1,9 @@
 using CourseManagement.BLL.Interfaces;
-using CourseManagement.DAL.Interfaces;
+using CourseManagement.BLL.Services.Interfaces;
+using CourseManagement.BLL.ViewModels;
 using CourseManagement.DAL.Entites;
+using CourseManagement.DAL.Interfaces;
+using CourseManagement.DAL.Repositores.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,35 +14,118 @@ namespace CourseManagement.BLL.Services
 {
     public class CourseService : ICourseService
     {
-        private readonly ICourseRepository _repo;
-        public CourseService(ICourseRepository repo)
+        private readonly ICourseRepository _courseRepo;
+
+        public CourseService(ICourseRepository courseRepo)
         {
-            _repo = repo;
+            _courseRepo = courseRepo;
         }
 
-        public Task<IEnumerable<Course>> GetPagedCoursesAsync(string? search, string? category, int page, int pageSize)
-            => _repo.GetAllAsync(search, category, page, pageSize);
-
-        public Task<int> GetCoursesCountAsync(string? search, string? category)
-            => _repo.CountAsync(search, category);
-        public async Task<IEnumerable<Course>> GetAllCoursesAsync()
+        public async Task<IEnumerable<CourseVM>> GetAllAsync()
         {
-            return await _repo.GetAllCoursesAsync();
+            var courses = await _courseRepo.GetAllAsync();
+
+            return courses.Select(c => new CourseVM
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Category = c.Category,
+                Description = c.Description,
+                StartDate = c.StartDate,
+                EndDate = c.EndDate,
+                InstructorId = (int)c.InstructorId
+            });
         }
-        public Task<Course?> GetCourseAsync(int id)
-            => _repo.GetByIdAsync(id);
 
-        public Task AddCourseAsync(Course course)
-            => _repo.AddAsync(course);
+        public async Task<CourseVM?> GetByIdAsync(int id)
+        {
+            var course = await _courseRepo.GetByIdAsync(id);
+            if (course == null) return null;
 
-        public Task UpdateCourseAsync(Course course)
-            => _repo.UpdateAsync(course);
+            return new CourseVM
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Category = course.Category,
+                Description = course.Description,
+                StartDate = course.StartDate,
+                EndDate = course.EndDate,
+                InstructorId = (int)course.InstructorId
+            };
+        }
 
-        public Task DeleteCourseAsync(int id)
-            => _repo.DeleteAsync(id);
+        public async Task<CourseVM?> GetWithSessionsAsync(int id)
+        {
+            var course = await _courseRepo.GetCourseWithSessionsAsync(id);
+            if (course == null) return null;
 
-        public Task<bool> IsCourseNameUniqueAsync(string name, int? excludeId = null)
-            => _repo.IsNameUniqueAsync(name, excludeId);
+            return new CourseVM
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Category = course.Category,
+                Description = course.Description,
+                StartDate = course.StartDate,
+                EndDate = course.EndDate,
+                InstructorId = (int)course.InstructorId
+            };
+        }
+
+        public async Task<IEnumerable<CourseVM>> SearchByNameAsync(string name)
+        {
+            var courses = await _courseRepo.SearchByNameAsync(name);
+
+            return courses.Select(c => new CourseVM
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Category = c.Category,
+                Description = c.Description,
+                StartDate = c.StartDate,
+                EndDate = c.EndDate,
+                InstructorId = (int)c.InstructorId
+            });
+        }
+
+        public async Task AddAsync(CourseVM vm)
+        {
+            var course = new Course
+            {
+                Name = vm.Name,
+                Category = vm.Category,
+                Description = vm.Description,
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                InstructorId = vm.InstructorId
+            };
+
+            await _courseRepo.AddAsync(course);
+            await _courseRepo.SaveAsync();
+        }
+
+        public async Task UpdateAsync(CourseVM vm)
+        {
+            var course = await _courseRepo.GetByIdAsync(vm.Id);
+            if (course == null) return;
+
+            course.Name = vm.Name;
+            course.Category = vm.Category;
+            course.Description = vm.Description;
+            course.StartDate = vm.StartDate;
+            course.EndDate = vm.EndDate;
+            course.InstructorId = vm.InstructorId;
+
+            _courseRepo.Update(course);
+            await _courseRepo.SaveAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var course = await _courseRepo.GetByIdAsync(id);
+            if (course == null) return;
+
+            _courseRepo.Delete(course);
+            await _courseRepo.SaveAsync();
+        }
     }
-
 }
