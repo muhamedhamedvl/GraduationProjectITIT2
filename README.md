@@ -3,6 +3,7 @@
 ---
 ## Mohamed Hamed  – User Management 
 ### Tasks:
+- Setup DbContext + Migrations with SQL Server.
 - Full CRUD for Users (Admin, Instructor, Trainee).
 - Search + Pagination by name or role.
 - Validations:
@@ -45,8 +46,7 @@
 ### Tasks:
 - Prepare the full Solution Structure (DAL, BLL, Web).
 - Create Repository Interfaces & Implementations:
-  - ICourseRepository, ISessionRepository, IUserRepository, IGradeRepository.
-- Setup DbContext + Migrations with SQL Server.
+- ICourseRepository, ISessionRepository, IUserRepository, IGradeRepository.
 - Configure Dependency Injection for all Services/Repositories.
 - Shared Partial Views + Bootstrap Alerts/Notifications.
 
