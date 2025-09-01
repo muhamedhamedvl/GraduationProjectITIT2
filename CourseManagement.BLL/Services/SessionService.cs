@@ -21,80 +21,93 @@ namespace CourseManagement.BLL.Services
             _courseRepo = courseRepo;
         }
 
-        public async Task<IEnumerable<Session>> GetAllSessionsAsync(string courseName = null, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<SessionVM>> GetAllAsync()
         {
-            var query = await _sessionRepo.GetAllAsync();
+            var sessions = await _sessionRepo.GetAllAsync();
+            var result = new List<SessionVM>();
 
-            if (!string.IsNullOrEmpty(courseName))
+            foreach (var s in sessions)
             {
-                query = query.Where(s => s.Course.Name.Contains(courseName, StringComparison.OrdinalIgnoreCase));
+                var course = await _courseRepo.GetByIdAsync(s.CourseId);
+
+                result.Add(new SessionVM
+                {
+                    Id = s.Id,
+                    StartDate = s.StartDate,
+                    EndDate = s.EndDate,
+                    CourseId = s.CourseId,
+                    CourseName = course?.Name ?? "Unknown"
+                });
             }
 
-            return query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            return result;
         }
 
-        public async Task<Session> GetSessionByIdAsync(int id)
+        public async Task<SessionVM?> GetByIdAsync(int id)
         {
-            return await _sessionRepo.GetByIdAsync(id);
+            var session = await _sessionRepo.GetByIdAsync(id);
+            if (session == null) return null;
+
+            var course = await _courseRepo.GetByIdAsync(session.CourseId);
+
+            return new SessionVM
+            {
+                Id = session.Id,
+                StartDate = session.StartDate,
+                EndDate = session.EndDate,
+                CourseId = session.CourseId,
+                CourseName = course?.Name ?? "Unknown"
+            };
         }
 
-        public async Task AddSessionAsync(SessionViewModel model)
+        public async Task<IEnumerable<SessionVM>> GetByCourseIdAsync(int courseId)
         {
-            if (model.StartDate < DateTime.Today)
-                throw new ArgumentException("Start date cannot be in the past.");
+            var sessions = await _sessionRepo.GetByCourseIdAsync(courseId);
+            var course = await _courseRepo.GetByIdAsync(courseId);
 
-            if (model.EndDate <= model.StartDate)
-                throw new ArgumentException("End date must be after start date.");
+            return sessions.Select(s => new SessionVM
+            {
+                Id = s.Id,
+                StartDate = s.StartDate,
+                EndDate = s.EndDate,
+                CourseId = s.CourseId,
+                CourseName = course?.Name ?? "Unknown"
+            });
+        }
 
-            var course = await _courseRepo.GetByIdAsync(model.CourseId);
-            if (course == null)
-                throw new ArgumentException("Invalid course selected.");
-
+        public async Task AddAsync(SessionVM vm)
+        {
             var session = new Session
             {
-                Name = model.Name,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
-                CourseId = model.CourseId
+                StartDate = vm.StartDate,
+                EndDate = vm.EndDate,
+                CourseId = vm.CourseId
             };
 
             await _sessionRepo.AddAsync(session);
+            await _sessionRepo.SaveAsync();
         }
 
-        public async Task UpdateSessionAsync(int id, SessionViewModel model)
+        public async Task UpdateAsync(SessionVM vm)
         {
-            var session = await _sessionRepo.GetByIdAsync(id);
-            if (session == null)
-                throw new ArgumentException("Session not found.");
+            var session = await _sessionRepo.GetByIdAsync(vm.Id);
+            if (session == null) return;
 
-            if (model.StartDate < DateTime.Today)
-                throw new ArgumentException("Start date cannot be in the past.");
+            session.StartDate = vm.StartDate;
+            session.EndDate = vm.EndDate;
+            session.CourseId = vm.CourseId;
 
-            if (model.EndDate <= model.StartDate)
-                throw new ArgumentException("End date must be after start date.");
-
-            var course = await _courseRepo.GetByIdAsync(model.CourseId);
-            if (course == null)
-                throw new ArgumentException("Invalid course selected.");
-
-            session.Name = model.Name;
-            session.StartDate = model.StartDate;
-            session.EndDate = model.EndDate;
-            session.CourseId = model.CourseId;
-
-            await _sessionRepo.UpdateSessionAsync(session);
+            _sessionRepo.Update(session);
+            await _sessionRepo.SaveAsync();
         }
 
-        public async Task DeleteSessionAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var session = await _sessionRepo.GetByIdAsync(id);
-            if (session != null)
-            {
-                await _sessionRepo.DeleteSessionAsync(id);
-            }
+            if (session == null) return;
+
+            _sessionRepo.Delete(session);
+            await _sessionRepo.SaveAsync();
         }
     }
 }

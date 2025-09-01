@@ -7,10 +7,12 @@ namespace CourseManagement.BLL.Services.Interfaces
 {
     public interface ISessionService
     {
-        Task<IEnumerable<Session>> GetAllSessionsAsync(string courseName = null, int page = 1, int pageSize = 10);
-        Task<Session> GetSessionByIdAsync(int id);
-        Task AddSessionAsync(SessionViewModel model);
-        Task UpdateSessionAsync(int id, SessionViewModel model);
-        Task DeleteSessionAsync(int id);
+        Task<IEnumerable<SessionVM>> GetAllAsync();
+        Task<SessionVM?> GetByIdAsync(int id);
+        Task<IEnumerable<SessionVM>> GetByCourseIdAsync(int courseId);
+
+        Task AddAsync(SessionVM vm);
+        Task UpdateAsync(SessionVM vm);
+        Task DeleteAsync(int id);
     }
 }
