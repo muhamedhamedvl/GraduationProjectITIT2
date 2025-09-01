@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250830140537_SeedData")]
-    partial class SeedData
+    [Migration("20250901120757_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,18 @@ namespace CourseManagement.DAL.Migrations
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Category = 0,
+                            Description = "Learn ASP.NET Core MVC from scratch",
+                            EndDate = new DateTime(2025, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            InstructorId = 2,
+                            Name = "ASP.NET Core MVC",
+                            StartDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("CourseManagement.DAL.Entites.Grade", b =>
@@ -83,6 +95,29 @@ namespace CourseManagement.DAL.Migrations
                     b.HasIndex("TraineeId");
 
                     b.ToTable("Grades");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SessionId = 1,
+                            TraineeId = 3,
+                            Value = 90
+                        },
+                        new
+                        {
+                            Id = 2,
+                            SessionId = 1,
+                            TraineeId = 4,
+                            Value = 75
+                        },
+                        new
+                        {
+                            Id = 3,
+                            SessionId = 2,
+                            TraineeId = 3,
+                            Value = 85
+                        });
                 });
 
             modelBuilder.Entity("CourseManagement.DAL.Entites.Session", b =>
@@ -107,6 +142,22 @@ namespace CourseManagement.DAL.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Sessions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourseId = 1,
+                            EndDate = new DateTime(2025, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourseId = 1,
+                            EndDate = new DateTime(2025, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2025, 9, 6, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("CourseManagement.DAL.Entites.User", b =>
@@ -136,9 +187,30 @@ namespace CourseManagement.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "ahmed@example.com",
+                            Email = "admin@test.com",
+                            Name = "Muhamed Hamed",
+                            Role = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "AhmedReda@gmail.com",
                             Name = "Ahmed Reda",
                             Role = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "Mahmoud@test.com",
+                            Name = "Mahmoud",
+                            Role = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "Ali@test.com",
+                            Name = "Ali",
+                            Role = 2
                         });
                 });
 
@@ -157,7 +229,7 @@ namespace CourseManagement.DAL.Migrations
                     b.HasOne("CourseManagement.DAL.Entites.Session", "Session")
                         .WithMany("Grades")
                         .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseManagement.DAL.Entites.User", "Trainee")
@@ -175,7 +247,7 @@ namespace CourseManagement.DAL.Migrations
                     b.HasOne("CourseManagement.DAL.Entites.Course", "Course")
                         .WithMany("Sessions")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");

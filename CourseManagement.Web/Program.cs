@@ -1,8 +1,11 @@
+using CourseManagement.BLL.Interfaces;
 using CourseManagement.BLL.Services;
 using CourseManagement.BLL.Services.Interfaces;
 using CourseManagement.DAL.Data;
+using CourseManagement.DAL.Interfaces;
 using CourseManagement.DAL.Repositores;
 using CourseManagement.DAL.Repositores.Interfaces;
+using CourseManagement.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseManagement.Web
@@ -12,22 +15,24 @@ namespace CourseManagement.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            //Services and Repositories
+            builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<IGradeService, GradeService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<ICourseService, CourseService>();
-builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
-builder.Services.AddScoped<IInstructorService, InstructorService>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IGradeRepository, GradeRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-               builder.Services.AddScoped<SessionService, SessionService>();
 
-   builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddControllersWithViews();
             var app = builder.Build();

@@ -1,0 +1,16 @@
+﻿@model CourseManagement.BLL.ViewModels.GradeVM
+
+@{
+    ViewData["Title"] = "Create Grade";
+}
+
+<h2>Create Grade</h2>
+
+<form asp-action="Create" asp-controller="Grades" method="post">
+    @Html.AntiForgeryToken()
+
+    <partial name="_GradeForm" model="Model" />
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</form>

@@ -1,4 +1,5 @@
-@model CourseManagement.BLL.ViewModels.SessionViewModel
+@model CourseManagement.BLL.ViewModels.SessionVM
+
 @{
     ViewData["Title"] = "Delete Session";
 }
@@ -6,12 +7,27 @@
 <h2>Delete Session</h2>
 
 <div class="alert alert-warning">
-    Are you sure you want to delete the session "<strong>@Model.Name</strong>"?
+    Are you sure you want to delete this session?
 </div>
 
-<form asp-action="DeleteConfirmed" method="post">
+<div class="card p-3 mb-3">
+    <dl class="row">
+        <dt class="col-sm-3">Course</dt>
+        <dd class="col-sm-9">@Model.CourseName</dd>
+
+        <dt class="col-sm-3">Start Date</dt>
+        <dd class="col-sm-9">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
+
+        <dt class="col-sm-3">End Date</dt>
+        <dd class="col-sm-9">@Model.EndDate.ToString("yyyy-MM-dd")</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete
+    </button>
+    <a asp-action="Index" asp-route-courseId="@Model.CourseId" class="btn btn-secondary">Cancel</a>
 </form>
-﻿

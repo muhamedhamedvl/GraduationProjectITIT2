@@ -1,22 +1,51 @@
-@model CourseManagement.DAL.Entites.Course
+@model CourseManagement.BLL.ViewModels.CourseVM
+
 @{
-    ViewBag.Title = "Delete Course";
+    ViewData["Title"] = "Delete Course";
 }
 
-<h2>Delete Course</h2>
-<h4>Are you sure you want to delete this?</h4>
+<div class="container mt-4">
+    <h2>Delete Course</h2>
+    <hr />
 
-<div>
-    <strong>@Model.Name</strong> - @Model.Category
-    <br />
-    Instructor: @Model.Instructor.FirstName @Model.Instructor.LastName
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        Are you sure you want to delete this course?
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Course Name:</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Description:</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Category:</dt>
+                <dd class="col-sm-9">@Model.Category</dd>
+
+                <dt class="col-sm-3">Start Date:</dt>
+                <dd class="col-sm-9">@Model.StartDate.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-3">End Date:</dt>
+                <dd class="col-sm-9">@Model.EndDate.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-3">Instructor ID:</dt>
+                <dd class="col-sm-9">@Model.InstructorId</dd>
+            </dl>
+        </div>
+
+        <div class="card-footer">
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
 </div>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    @* <button type="submit" asp-action="Index" class="btn btn-danger">Delete</button> *@
-    <input type="submit" value="Save" class="btn btn-primary" />
-
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
-﻿

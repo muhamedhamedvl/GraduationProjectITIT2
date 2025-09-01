@@ -4,29 +4,26 @@ using System;
 
 namespace CourseManagement.DAL.Entites
 {
+    public enum Category
+    {
+        Programming,
+        Design,
+        Marketing,
+        Business,
+        DataScience,
+        DevOps
+    }
     public class Course
     {
         public int Id { get; set; }
-
-        [Required]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
-        //[NoNumber]
         public string Name { get; set; }
-
-        [Required(ErrorMessage = "Category is required")]
-        public string Category { get; set; }
-
+        public Category Category { get; set; }
         public string? Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int? InstructorId { get; set; }
+        public User Instructor { get; set; }
 
-        // FK
-        [Required]
-        public int InstructorId { get; set; }
-
-        [ForeignKey("InstructorId")]
-        public Instructor Instructor { get; set; }
-
-     public ICollection<Session> Sessions { get; set; }
-
-    
+        public ICollection<Session> Sessions { get; set; }
     }
 }

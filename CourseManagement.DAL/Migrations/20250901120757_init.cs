@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CourseManagement.DAL.Migrations
 {
     /// <inheritdoc />
@@ -68,7 +70,7 @@ namespace CourseManagement.DAL.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,13 +91,48 @@ namespace CourseManagement.DAL.Migrations
                         column: x => x.SessionId,
                         principalTable: "Sessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Grades_Users_TraineeId",
                         column: x => x.TraineeId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Name", "Role" },
+                values: new object[,]
+                {
+                    { 1, "admin@test.com", "Muhamed Hamed", 0 },
+                    { 2, "AhmedReda@gmail.com", "Ahmed Reda", 1 },
+                    { 3, "Mahmoud@test.com", "Mahmoud", 2 },
+                    { 4, "Ali@test.com", "Ali", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "Id", "Category", "Description", "EndDate", "InstructorId", "Name", "StartDate" },
+                values: new object[] { 1, 0, "Learn ASP.NET Core MVC from scratch", new DateTime(2025, 9, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "ASP.NET Core MVC", new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "Sessions",
+                columns: new[] { "Id", "CourseId", "EndDate", "StartDate" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2025, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, new DateTime(2025, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 9, 6, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Grades",
+                columns: new[] { "Id", "SessionId", "TraineeId", "Value" },
+                values: new object[,]
+                {
+                    { 1, 1, 3, 90 },
+                    { 2, 1, 4, 75 },
+                    { 3, 2, 3, 85 }
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,53 +1,130 @@
-@model IEnumerable<CourseManagement.DAL.Entites.Course>
+@model CourseManagement.BLL.ViewModels.CourseListVM
+
 @{
-    ViewBag.Title = "Courses";
+    ViewData["Title"] = "Courses List";
 }
 
 <h2>Courses</h2>
 
-<form method="post" asp-action="Index">
-    <input type="text" name="search" value="@ViewBag.Search" placeholder="Search by name" />
-    <input type="text" name="category" value="@ViewBag.Category" placeholder="Search by category" />
-    <button type="submit">Search</button>
-</form>
+@* 🔔 Messages *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New Course</a>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add New Course
+    </a>
 </p>
 
-<table class="table table-bordered">
+@* Search + Page Size *@
+<form asp-action="Index" method="get" class="mb-3 row g-2 align-items-center">
+
+    <div class="col-md-3">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by name..." value="@Model.Search" />
+    </div>
+
+    <div class="col-md-2">
+        <select name="pageSize" class="form-select" onchange="this.form.submit()">
+            <option value="5" selected="@(Model.PageSize == 5)">5</option>
+            <option value="10" selected="@(Model.PageSize == 10)">10</option>
+            <option value="15" selected="@(Model.PageSize == 15)">15</option>
+            <option value="20" selected="@(Model.PageSize == 20)">20</option>
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </div>
+
+    <input type="hidden" name="page" value="1" />
+</form>
+
+@* Courses Table *@
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Category</th>
-            <th>Instructor</th>
-            <th></th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Instructor Id</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var course in Model)
+        @if (Model.Items.Any())
+        {
+            @foreach (var course in Model.Items)
+            {
+                <tr>
+                    <td>@course.Name</td>
+                    <td>@course.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@course.EndDate.ToString("yyyy-MM-dd")</td>
+                    <td>@course.InstructorId</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@course.Name</td>
-                <td>@course.Category</td>
-                <td>@course.Instructor.FirstName @course.Instructor.LastName</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@course.Id" class="btn btn-sm btn-success me-1"><i class="bi bi-pen"></i>Edit</a> |
-                    <a asp-action="Details" asp-route-id="@course.Id" class="btn btn-info">Details</a>
-
-                    <a asp-action="Delete" asp-route-id="@course.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i>Delete</a>
-                </td>
+                <td colspan="5" class="text-center">No courses found.</td>
             </tr>
         }
     </tbody>
 </table>
 
-<div>
-    Page @ViewBag.CurrentPage of @ViewBag.TotalPages
-    <br />
-    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
-    {
-        <a asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-category="@ViewBag.Category">@i</a>
-    }
-</div>
-﻿
+@* Pagination *@
+<nav aria-label="Course pagination">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+            <a class="page-link"
+                asp-action="Index"
+                asp-route-search="@Model.Search"
+                asp-route-pageSize="@Model.PageSize"
+                asp-route-page="@(Model.Page - 1)">
+                Previous
+            </a>
+        </li>
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Page ? "active" : "")">
+                <a class="page-link"
+                    asp-action="Index"
+                    asp-route-search="@Model.Search"
+                    asp-route-pageSize="@Model.PageSize"
+                    asp-route-page="@i">
+                    @i
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
+            <a class="page-link"
+                asp-action="Index"
+                asp-route-search="@Model.Search"
+                asp-route-pageSize="@Model.PageSize"
+                asp-route-page="@(Model.Page + 1)">
+                Next
+            </a>
+        </li>
+
+    </ul>
+</nav>
