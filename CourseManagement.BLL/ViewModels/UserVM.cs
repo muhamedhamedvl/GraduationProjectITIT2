@@ -19,7 +19,7 @@ namespace CourseManagement.BLL.ViewModels
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email format")]
-        [Remote(action: "IsEmailUnique", controller: "User", ErrorMessage = "Email already exists")]
+        [Remote(action: "IsEmailUnique", controller: "User", AdditionalFields = nameof(Id), ErrorMessage = "Email already exists")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Role is required")]
