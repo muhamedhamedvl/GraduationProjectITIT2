@@ -79,6 +79,7 @@ namespace CourseManagement.BLL.Services
         {
             var session = new Session
             {
+
                 StartDate = vm.StartDate,
                 EndDate = vm.EndDate,
                 CourseId = vm.CourseId

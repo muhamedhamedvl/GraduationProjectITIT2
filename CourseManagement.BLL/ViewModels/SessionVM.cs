@@ -8,10 +8,7 @@ namespace CourseManagement.BLL.ViewModels
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(50, MinimumLength = 3)]
-        [NoNumber(ErrorMessage = "Session name must not contain numbers")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -24,6 +21,6 @@ namespace CourseManagement.BLL.ViewModels
 
         [Required]
         public int CourseId { get; set; }
-        public string CourseName { get; set; }
+        public string? CourseName { get; set; }
     }
 }
