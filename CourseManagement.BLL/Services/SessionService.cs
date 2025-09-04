@@ -36,7 +36,7 @@ namespace CourseManagement.BLL.Services
                     StartDate = s.StartDate,
                     EndDate = s.EndDate,
                     CourseId = s.CourseId,
-                    CourseName = course?.Name ?? "Unknown"
+                    CourseName = course?.Name 
                 });
             }
 
@@ -56,7 +56,7 @@ namespace CourseManagement.BLL.Services
                 StartDate = session.StartDate,
                 EndDate = session.EndDate,
                 CourseId = session.CourseId,
-                CourseName = course?.Name ?? "Unknown"
+                CourseName = course?.Name 
             };
         }
 
@@ -71,7 +71,7 @@ namespace CourseManagement.BLL.Services
                 StartDate = s.StartDate,
                 EndDate = s.EndDate,
                 CourseId = s.CourseId,
-                CourseName = course?.Name ?? "Unknown"
+                CourseName = course?.Name 
             });
         }
 
